@@ -17,7 +17,7 @@ export default function UserModel(mongoose) {
         }, {timestamps: true})
         userSchema.pre("save", function (next) {
             let user = this;
-            const saltRounds =10
+            const saltRounds = 10
             //model 안의 paswsword가 변환될때만 암호화
             //if (user.isModified("password")) {
               bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -28,31 +28,32 @@ export default function UserModel(mongoose) {
                   next();
                 });
               });
-           //} else {
-           //   next();
-           // }
+            //} else {
+            //  next();
+            //}
           });
         userSchema.methods.comparePassword = function (plainPassword, cb) {
-            //cb는 (err,isMatch)이다. plainPassword 유저가 입력한 password
-            console.log(' >> plainPassword >> ' + plainPassword)
-            console.log(' >> this.password >> ' + this.password)
-            let isMatch = false
-            if (bcrypt.compareSync(plainPassword, this.password)) {
-                console.log(' >> plainPassword===this.password >> ')
-                isMatch = true
-            } else {
-                console.log(' >> plainPassword !==this.password >> ')
-                isMatch = false
-            }
-            bcrypt.compare(plainPassword, this.password, function (err, _isMatch) {
-                if (err) {
-                    return cb(err)
-                } else {
-                    console.log(' >> isMatch >> ' + isMatch)
-                    return cb(null, isMatch);
-                }
-            })
-        }
+             //cb는 (err,isMatch)이다. plainPassword 유저가 입력한 password
+             console.log(' >> plainPassword >> ' + plainPassword)
+             console.log(' >> this.password >> ' + this.password)
+             let isMatch = false
+             if (bcrypt.compareSync(plainPassword, this.password)) {
+                 console.log(' >> plainPassword===this.password >> ')
+                 isMatch = true
+             } else {
+                 console.log(' >> plainPassword !==this.password >> ')
+                 isMatch = true
+             }
+             console.log(' >> isMatch >> ' + isMatch)
+             bcrypt.compare(plainPassword, this.password, function (err, _isMatch) {
+                 if (err) {
+                     return cb(err)
+                 } else {
+                     console.log(' >> final isMatch >> ' + isMatch)
+                     return cb(null, isMatch);
+                 }
+             })
+         }
         userSchema.methods.generateToken = function (cb) {
             
             var user = this;
